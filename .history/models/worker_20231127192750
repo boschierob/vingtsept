@@ -1,0 +1,26 @@
+const mongoose = require('mongoose');
+
+const workerSchema = new mongoose.Schema({
+  nom: String,
+  email: String,
+  telephone: String,
+  motDePasse: String,
+  statut: String,
+  customers: [
+    {
+      nom: String,
+      email: String,
+      telephone: String,
+      interventions: [interventionSchema]
+    },
+  ]
+});
+
+const interventionSchema = new mongoose.Schema({
+  type: String,
+  description: String,
+});
+
+const Worker = mongoose.model('Worker', workerSchema);
+
+module.exports = Worker;
