@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const MonthlySheet = require('../models/MonthlySheet');
-const Worker = require('../models/Worker');
+const Worker = require('./models/worker');
 
 // Fonction pour créer une nouvelle feuille mensuelle
 const createMonthlySheet = async (req, res) => {

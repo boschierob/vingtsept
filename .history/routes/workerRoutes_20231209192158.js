@@ -1,7 +1,7 @@
 // workerRoutes.js
 const express = require('express');
 const router = express.Router();
-const Worker = require('../models/Worker');
+const Worker = require("D:\repo\vingtsept\models\Worker.js");
 
 // Route pour obtenir tous les travailleurs
 router.get('/', async (req, res) => {

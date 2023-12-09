@@ -48,11 +48,6 @@ app.get('/login', (req, res) => {
   res.render('login.ejs'); // Assurez-vous d'avoir un fichier de modèle (pug, ejs, etc.) pour votre formulaire d'inscription
 });
 
-// Route pour afficher le dashboard
-app.get('/dashboard', (req, res) => {
-  res.render('dashboard.ejs'); // Assurez-vous d'avoir un fichier de modèle (pug, ejs, etc.) pour votre formulaire d'inscription
-});
-
 // Route pour afficher le formulaire d'inscription
 app.get('/register', (req, res) => {
   res.render('register'); // Assurez-vous d'avoir un fichier de modèle (pug, ejs, etc.) pour votre formulaire d'inscription

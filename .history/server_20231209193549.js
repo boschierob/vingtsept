@@ -10,15 +10,13 @@ const session =require('express-session');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors'); 
-const flash = require('express-flash');
 
 const Worker = require('./models/Worker');
 
 const initializePassport = require('./passport-config')
-
-initializePassport(passport);
-
-
+initializePassport(
+  passport
+)
 
 const workerRoutes = require('./routes/workerRoutes');
 const monthlySheetRoutes = require('./routes/monthlySheetRoutes');
@@ -28,30 +26,16 @@ const PORT = process.env.PORT || 3333;
 const MONGODB_URI = 'mongodb+srv://bosc8088:yJDssmWidhb9FukP@first-bird.h5qbziz.mongodb.net/?retryWrites=true&w=majority'; 
 
 // Middleware
-app.use(express.urlencoded({ extended: true }));
-app.set('view-engine', 'ejs');
-app.set('views', './views');
 app.use(bodyParser.json());
 app.use(cors({ origin: 'http://127.0.0.1:5500' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 
 // Routes
 app.use('/api/workers', workerRoutes);
 app.use('/api/monthlySheets', monthlySheetRoutes);
-
-// Route pour afficher le formulaire d'inscription
-app.get('/login', (req, res) => {
-  res.render('login.ejs'); // Assurez-vous d'avoir un fichier de modèle (pug, ejs, etc.) pour votre formulaire d'inscription
-});
-
-// Route pour afficher le dashboard
-app.get('/dashboard', (req, res) => {
-  res.render('dashboard.ejs'); // Assurez-vous d'avoir un fichier de modèle (pug, ejs, etc.) pour votre formulaire d'inscription
-});
 
 // Route pour afficher le formulaire d'inscription
 app.get('/register', (req, res) => {
@@ -60,7 +44,7 @@ app.get('/register', (req, res) => {
 
 // Route POST pour traiter les données d'inscription
 app.post('/register', async (req, res) => {
-  const { nom, email, motDePasse, statut } = req.body;
+  const { name, email, motDePasse } = req.body;
 
   try {
     const existingWorker = await Worker.findOne({ email: email });
@@ -72,10 +56,9 @@ app.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(motDePasse, 10);
 
     const newWorker = new Worker({
-      nom: nom,
+      name: name,
       email: email,
-      motDePasse: hashedPassword,
-      statut: statut
+      motDePasse: hashedPassword
       // Ajoutez d'autres champs si nécessaire
     });
 
@@ -84,13 +67,12 @@ app.post('/register', async (req, res) => {
    // res.redirect('/login'); // Redirigez l'utilisateur vers la page de connexion après l'inscription réussie
   } catch (error) {
     console.error(error);
-   // res.render('register', { message: 'Error during registration' });
-   res.json({ message : 'error occured during registering'})
+    res.render('register', { message: 'Error during registration' });
   }
 });
 
 app.post('/login',
-  passport.authenticate('local', { successRedirect: '/dashboard', failureRedirect: '/login', failureFlash: true })
+  passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login-failure' })
 );
 
 // Connexion à MongoDB

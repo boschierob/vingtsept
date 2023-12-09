@@ -10,15 +10,13 @@ const session =require('express-session');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors'); 
-const flash = require('express-flash');
 
 const Worker = require('./models/Worker');
 
 const initializePassport = require('./passport-config')
-
-initializePassport(passport);
-
-
+initializePassport(
+  passport
+)
 
 const workerRoutes = require('./routes/workerRoutes');
 const monthlySheetRoutes = require('./routes/monthlySheetRoutes');
@@ -28,7 +26,6 @@ const PORT = process.env.PORT || 3333;
 const MONGODB_URI = 'mongodb+srv://bosc8088:yJDssmWidhb9FukP@first-bird.h5qbziz.mongodb.net/?retryWrites=true&w=majority'; 
 
 // Middleware
-app.use(express.urlencoded({ extended: true }));
 app.set('view-engine', 'ejs');
 app.set('views', './views');
 app.use(bodyParser.json());
@@ -37,7 +34,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 
 // Routes
 app.use('/api/workers', workerRoutes);
@@ -45,12 +41,7 @@ app.use('/api/monthlySheets', monthlySheetRoutes);
 
 // Route pour afficher le formulaire d'inscription
 app.get('/login', (req, res) => {
-  res.render('login.ejs'); // Assurez-vous d'avoir un fichier de modèle (pug, ejs, etc.) pour votre formulaire d'inscription
-});
-
-// Route pour afficher le dashboard
-app.get('/dashboard', (req, res) => {
-  res.render('dashboard.ejs'); // Assurez-vous d'avoir un fichier de modèle (pug, ejs, etc.) pour votre formulaire d'inscription
+  res.render('login'); // Assurez-vous d'avoir un fichier de modèle (pug, ejs, etc.) pour votre formulaire d'inscription
 });
 
 // Route pour afficher le formulaire d'inscription
@@ -90,7 +81,7 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/login',
-  passport.authenticate('local', { successRedirect: '/dashboard', failureRedirect: '/login', failureFlash: true })
+  passport.authenticate('local', { successRedirect: '/dashboard', failureRedirect: '/login' })
 );
 
 // Connexion à MongoDB
