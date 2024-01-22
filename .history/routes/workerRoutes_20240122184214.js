@@ -26,23 +26,14 @@ router.get('/:id', async (req, res) => {
 
 // Route pour créer un nouveau travailleur
 router.post('/register', async (req, res) => {
-  const { nom, email,telephone, motDePasse, statut, customers } = req.body;
-
   try {
-    const existingWorker = await Worker.findOne({ email: email });
-
-    if (existingWorker) {
-      return res.json({ message: 'Email already registered' });
-    }
-
-    const hashedPassword = await bcrypt.hash(motDePasse, 10);
+    const hashedPassword = bcrypt.hash(req.body.motDePasse);
     const newWorker = new Worker({
-      nom: nom,
-      email: email,
-      telephone: telephone,
+      nom: req.body.nom,
+      email: req.body.email,
+      telephone: req.body.telephone,
       motDePasse: hashedPassword,
-      statut: statut,
-      customers: customers
+      statut: req.body.statut
     });
     const savedWorker = await newWorker.save();
     res.status(201).json(savedWorker);
